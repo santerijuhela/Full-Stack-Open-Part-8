@@ -1,6 +1,6 @@
-const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
-const { v1: uuid } = require("uuid");
+const { ApolloServer } = require('@apollo/server')
+const { startStandaloneServer } = require('@apollo/server/standalone')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -128,6 +128,7 @@ const typeDefs = /* GraphQL */ `
       published: Int!
       genres: [String!]
     ): Book
+    editAuthor(name: String!, setBornTo: Int!): Author
   }
 `;
 
@@ -138,35 +139,45 @@ const resolvers = {
     allBooks: (root, args) => {
       const byAuthor = (book) => {
         if (!args.author) {
-          return true;
+          return true
         }
-        return book.author === args.author;
-      };
+        return book.author === args.author
+      }
       const byGenre = (book) => {
         if (!args.genre) {
-          return true;
+          return true
         }
-        return book.genres.includes(args.genre);
-      };
-      return books.filter((book) => byAuthor(book) && byGenre(book));
+        return book.genres.includes(args.genre)
+      }
+      return books.filter((book) => byAuthor(book) && byGenre(book))
     },
     allAuthors: () => authors,
   },
   Author: {
     bookCount: ({ name }) => {
-      booksByAuthor = books.filter((book) => book.author === name);
-      return booksByAuthor.length;
+      booksByAuthor = books.filter((book) => book.author === name)
+      return booksByAuthor.length
     },
   },
   Mutation: {
     addBook: (root, args) => {
-      const newBook = { ...args, id: uuid() };
+      const newBook = { ...args, id: uuid() }
       books = books.concat(newBook);
-      const author = authors.find((a) => a.name === newBook.author);
+      const author = authors.find((a) => a.name === newBook.author)
       if (!author) {
-        authors = authors.concat({ name: newBook.author, id: uuid() });
+        authors = authors.concat({ name: newBook.author, id: uuid() })
       }
-      return newBook;
+      return newBook
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((a) => a.name === args.name)
+      if (!author) {
+        return null
+      }
+
+      const updatedAuthor = { ...author, born: args.setBornTo }
+      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
+      return updatedAuthor
     },
   },
 };
@@ -179,5 +190,5 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
   listen: { port: 4000 },
 }).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+  console.log(`Server ready at ${url}`)
+})
