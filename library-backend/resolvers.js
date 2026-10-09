@@ -20,9 +20,8 @@ const resolvers = {
     me: (root, args, context) => context.currentUser
   },
   Author: {
-    bookCount: ({ name }) => {
-      booksByAuthor = books.filter((book) => book.author === name)
-      return booksByAuthor.length
+    bookCount: async ({ _id }) => {
+      return Book.countDocuments({ author: _id })
     },
   },
   Mutation: {
