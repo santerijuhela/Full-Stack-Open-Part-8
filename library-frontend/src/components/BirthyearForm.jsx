@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client/react'
 import { ALL_AUTHORS, SET_BIRTHYEAR } from '../queries'
 
 const BirthyearForm = ({ authorList }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(authorList[0].name)
   const [born, setBorn] = useState('')
 
   const [setBirthyear] = useMutation(SET_BIRTHYEAR, {
