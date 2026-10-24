@@ -5,16 +5,15 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { ALL_AUTHORS } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
   const authorResult = useQuery(ALL_AUTHORS)
-  const bookResult = useQuery(ALL_BOOKS)
   const client = useApolloClient()
 
-  if (authorResult.loading || bookResult.loading) {
+  if (authorResult.loading) {
     return <div>loading...</div>
   }
 
@@ -52,13 +51,11 @@ const App = () => {
 
       <Books
         show={page === 'books'}
-        books={bookResult.loading ? [] : bookResult.data.allBooks}
       />
 
       <NewBook show={page === 'add'} />
       <Recommendations
         show={page === 'recommend'}
-        books={bookResult.loading ? [] : bookResult.data.allBooks}
       />
       <LoginForm
         show={page === 'login'}
