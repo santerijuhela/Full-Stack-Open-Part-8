@@ -28,6 +28,7 @@ const BirthyearForm = ({ authorList }) => {
           <label>
             name
             <select
+              name="name"
               value={name}
               onChange={({ target }) => setName(target.value)}
             >
