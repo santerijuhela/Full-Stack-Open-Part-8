@@ -22,7 +22,7 @@ const Books = ({ show }) => {
     return null
   }
 
-  if (bookResult.loading) {
+  if (bookResult.loading || genreResult.loading) {
     return <div>loading...</div>
   }
 
